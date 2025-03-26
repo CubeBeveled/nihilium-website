@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<head>
+  <title>Nihilium Anarchy</title>
+  <link rel="icon" type="image/x-icon" href="/icon.png">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+
+<body>
+  <div class="main-container">
+    <center>
+      <img src="favicon.ico" class="icon">
+    </center>
+
+    <div class="text-container">
+      <center>
+        <button onclick="copyText()" id="ip">nihilium.org</button>
+        Has bedrock support!
+      </center>
+    </div>
+  </div>
+</body>
+
+<script>
+  function copyText() {
+    navigator.clipboard.writeText("nihilium.org")
+  }
+
+  const button = document.getElementById("ip");
+  button.addEventListener("mouseenter", () => {
+    button.textContent = "Click to copy";
+  });
+
+  button.addEventListener("mouseleave", () => {
+    button.textContent = "nihilium.org";
+  });
+</script>
