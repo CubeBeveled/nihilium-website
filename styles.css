@@ -26,13 +26,13 @@ button {
 }
 
 button:hover {
-  transform: scale(1.1);
+  transform: scale(1.1) translateY(-2px);
   background: linear-gradient(to bottom, rgb(4, 4, 4), rgba(0, 0, 206, 0.486));
 }
 
 .main-container {
   border-radius: 10px;
-  /*Centering*/
+  /* Centering */
   position: absolute;
   top: 50%;
   left: 50%;
