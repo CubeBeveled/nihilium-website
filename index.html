@@ -16,6 +16,7 @@
     <div class="text-container">
       <center>
         <button onclick="copyText()" id="ip">nihilium.org</button>
+        <p id="online-players"></p>
         With bedrock support!
       </center>
     </div>
@@ -35,4 +36,17 @@
   button.addEventListener("mouseleave", () => {
     button.textContent = "nihilium.org";
   });
+
+  onlinePlayers()
+
+  async function onlinePlayers() {
+    await fetch("https://api.mcsrvstat.us/3/nihilium.org")
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("online-players");
+        if (data && data.online && data.players.online > 1) {
+          container.innerText = `There's ${data.players.online} players on the server right now!`;
+        }
+      });
+  }
 </script>
