@@ -1,52 +1,295 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
-  <title>Nihilium Anarchy</title>
-  <link rel="icon" type="image/x-icon" href="/icon.png">
-  <link rel="stylesheet" href="styles.css">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-</head>
-
-<body>
-  <div class="main-container">
-    <center>
-      <img src="favicon.ico" class="icon">
-    </center>
-
-    <div class="text-container">
-      <center>
-        <button onclick="copyText()" id="ip">nihilium.org</button>
-        <p id="online-players"></p>
-        With bedrock support!
-      </center>
-    </div>
-  </div>
-</body>
-
-<script>
-  function copyText() {
-    navigator.clipboard.writeText("nihilium.org")
-  }
-
-  const button = document.getElementById("ip");
-  button.addEventListener("mouseenter", () => {
-    button.textContent = "Click to copy";
-  });
-
-  button.addEventListener("mouseleave", () => {
-    button.textContent = "nihilium.org";
-  });
-
-  onlinePlayers()
-
-  async function onlinePlayers() {
-    await fetch("https://api.mcsrvstat.us/3/nihilium.org")
-      .then(res => res.json())
-      .then(data => {
-        const container = document.getElementById("online-players");
-        if (data && data.online && data.players.online > 1) {
-          container.innerText = `There's ${data.players.online} players on the server right now!`;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nihilium.org - Minecraft Anarchy Server</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Minecraft', Arial, sans-serif;
         }
-      });
-  }
-</script>
+
+        @font-face {
+            font-family: 'Minecraft';
+            src: url('https://cdnjs.cloudflare.com/ajax/libs/font-minecraft/1.1.1/font-minecraft.ttf');
+        }
+
+        body {
+            background-color: #001233;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(100, 180, 255, 0.3);
+            animation: float 10s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #4895ef;
+            box-shadow: 0 0 20px rgba(72, 149, 239, 0.5);
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #4895ef;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #4895ef, 0 0 10px #4895ef;
+            }
+            to {
+                text-shadow: 0 0 10px #4895ef, 0 0 20px #4895ef, 0 0 30px #4895ef;
+            }
+        }
+
+        .server-info {
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(0, 18, 51, 0.7);
+            border-radius: 10px;
+            border: 1px solid #4895ef;
+        }
+
+        .ip-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .ip {
+            background: rgba(0, 18, 51, 0.9);
+            padding: 10px 15px;
+            border-radius: 5px 0 0 5px;
+            border: 2px solid #4895ef;
+            border-right: none;
+            font-size: 1.2rem;
+        }
+
+        .copy-btn {
+            background: #4895ef;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+
+        .copy-btn:hover {
+            background: #3a76be;
+            transform: scale(1.05);
+        }
+
+        .player-count {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            padding: 10px;
+            color: #4895ef;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .description {
+            margin: 20px 0;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background:
+                linear-gradient(rgba(72, 149, 239, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(72, 149, 239, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            transform: perspective(500px) rotateX(60deg);
+            animation: grid-move 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes grid-move {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 40px;
+            }
+        }
+
+        .diamond {
+            width: 40px;
+            height: 40px;
+            background: #4895ef;
+            transform: rotate(45deg);
+            position: absolute;
+            opacity: 0.2;
+            animation: diamond-float 15s infinite linear;
+        }
+
+        @keyframes diamond-float {
+            0% {
+                transform: rotate(45deg) translateY(100vh) translateX(-100px);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.2;
+            }
+            80% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: rotate(45deg) translateY(-100vh) translateX(100px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid"></div>
+    <div id="particles"></div>
+    <div id="diamonds"></div>
+
+    <div class="container">
+        <h1>NIHILIUM.ORG</h1>
+        <div class="description">
+            Experience true anarchy in Minecraft. No rules. No resets. Pure chaos and freedom.
+        </div>
+
+        <div class="server-info">
+            <div class="player-count">
+                <span id="online-count">--</span> / <span id="max-count">--</span> players online
+            </div>
+
+            <div class="ip-container">
+                <div class="ip">nihilium.org</div>
+                <button class="copy-btn" id="copyBtn">COPY IP</button>
+            </div>
+        </div>
+
+        <p>Join the most chaotic anarchy server - where anything goes!</p>
+    </div>
+
+    <script>
+        // Create background particles
+        const particleContainer = document.getElementById('particles');
+        const diamondContainer = document.getElementById('diamonds');
+
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const size = Math.random() * 15 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.bottom = `${Math.random() * 100}%`;
+            const duration = Math.random() * 15 + 10;
+            particle.style.animationDuration = `${duration}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            particleContainer.appendChild(particle);
+        }
+
+        for (let i = 0; i < 10; i++) {
+            const diamond = document.createElement('div');
+            diamond.classList.add('diamond');
+            const size = Math.random() * 40 + 20;
+            diamond.style.width = `${size}px`;
+            diamond.style.height = `${size}px`;
+            diamond.style.left = `${Math.random() * 100}%`;
+            const duration = Math.random() * 15 + 15;
+            diamond.style.animationDuration = `${duration}s`;
+            diamond.style.animationDelay = `${Math.random() * 10}s`;
+            diamondContainer.appendChild(diamond);
+        }
+
+        // Copy IP functionality
+        document.getElementById('copyBtn').addEventListener('click', function () {
+            navigator.clipboard.writeText('nihilium.org').then(function () {
+                const btn = document.getElementById('copyBtn');
+                btn.textContent = 'COPIED!';
+                setTimeout(() => {
+                    btn.textContent = 'COPY IP';
+                }, 2000);
+            });
+        });
+
+        // Real-time player count fetch
+        async function updatePlayerCount() {
+            try {
+                const response = await fetch("https://api.mcstatus.io/v2/status/java/nihilium.org");
+                const data = await response.json();
+
+                const online = data.players.online;
+                const max = data.players.max;
+
+                document.getElementById('online-count').textContent = online;
+                document.getElementById('max-count').textContent = max;
+            } catch (error) {
+                console.error("Failed to fetch server status:", error);
+                document.getElementById('online-count').textContent = "--";
+                document.getElementById('max-count').textContent = "--";
+            }
+
+            setTimeout(updatePlayerCount, 10000); // update every 30 seconds
+        }
+
+        updatePlayerCount();
+    </script>
+</body>
+</html>
+
