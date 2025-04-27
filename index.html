@@ -225,7 +225,7 @@
 
         <div class="server-info">
             <div class="player-count">
-                <span id="online-count">--</span> / <span id="max-count">--</span> players online
+                <span id="online-count">--</span> players online
             </div>
 
             <div class="ip-container">
@@ -283,18 +283,16 @@
         // Real-time player count fetch
         async function updatePlayerCount() {
             try {
-                const response = await fetch("https://api.mcstatus.io/v2/status/java/nihilium.org");
+                const response = await fetch("https://api.mcsrvstat.us/3/nihilium.org");
                 const data = await response.json();
 
                 const online = data.players.online;
                 const max = data.players.max;
 
                 document.getElementById('online-count').textContent = online;
-                document.getElementById('max-count').textContent = max;
             } catch (error) {
                 console.error("Failed to fetch server status:", error);
                 document.getElementById('online-count').textContent = "--";
-                document.getElementById('max-count').textContent = "--";
             }
 
             setTimeout(updatePlayerCount, 10000); // update every 30 seconds
