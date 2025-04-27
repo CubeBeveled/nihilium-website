@@ -225,7 +225,7 @@
 
         <div class="server-info">
             <div class="player-count">
-                <span id="online-count">--</span> players online
+                <span id="online-count">-- players online</span>
             </div>
 
             <div class="ip-container">
@@ -289,13 +289,13 @@
                 const online = data.players.online;
                 const max = data.players.max;
 
-                document.getElementById('online-count').textContent = online;
+                if (data.online) document.getElementById("online-count").textContent = `${online} players online`;
+                else document.getElementById('online-count').textContent = "Server offline. Please check later!";
             } catch (error) {
                 console.error("Failed to fetch server status:", error);
-                document.getElementById('online-count').textContent = "--";
             }
 
-            setTimeout(updatePlayerCount, 10000); // update every 30 seconds
+            setTimeout(updatePlayerCount, 5000); // update every 5 seconds
         }
 
         updatePlayerCount();
